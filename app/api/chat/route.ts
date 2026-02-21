@@ -22,6 +22,19 @@ function getRateLimitInfo(ip: string) {
     return { allowed: true, remaining: RATE_LIMIT - entry.count };
 }
 
+// CORS headers applied directly in the route (more reliable than next.config.ts on Vercel)
+const CORS_HEADERS = {
+    "Access-Control-Allow-Origin": process.env.ALLOWED_ORIGIN || "*",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Credentials": "true",
+};
+
+// Handle preflight OPTIONS request
+export async function OPTIONS() {
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
+}
+
 export async function POST(request: Request) {
     try {
         // Rate limiting check
@@ -31,14 +44,14 @@ export async function POST(request: Request) {
         if (!allowed) {
             return NextResponse.json(
                 { error: "Too many requests. Please wait a minute before trying again." },
-                { status: 429 }
+                { status: 429, headers: CORS_HEADERS }
             );
         }
 
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
             console.error("GEMINI_API_KEY is missing in environment variables");
-            return NextResponse.json({ error: "API key missing" }, { status: 500 });
+            return NextResponse.json({ error: "API key missing" }, { status: 500, headers: CORS_HEADERS });
         }
 
         const genAI = new GoogleGenerativeAI(apiKey);
@@ -163,10 +176,10 @@ ${knowledgeBaseContent}
             },
         });
 
-        return new NextResponse(stream);
+        return new NextResponse(stream, { headers: CORS_HEADERS });
 
     } catch (error: any) {
         console.error("Chat error details:", error);
-        return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
+        return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500, headers: CORS_HEADERS });
     }
 }
