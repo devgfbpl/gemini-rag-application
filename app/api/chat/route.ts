@@ -3,8 +3,38 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
+// Simple in-memory rate limiter: 10 requests per minute per IP
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 10;
+const RATE_WINDOW_MS = 60 * 1000; // 1 minute
+
+function getRateLimitInfo(ip: string) {
+    const now = Date.now();
+    const entry = rateLimitMap.get(ip);
+    if (!entry || now > entry.resetAt) {
+        rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
+        return { allowed: true, remaining: RATE_LIMIT - 1 };
+    }
+    if (entry.count >= RATE_LIMIT) {
+        return { allowed: false, remaining: 0 };
+    }
+    entry.count++;
+    return { allowed: true, remaining: RATE_LIMIT - entry.count };
+}
+
 export async function POST(request: Request) {
     try {
+        // Rate limiting check
+        const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+            request.headers.get('x-real-ip') || 'unknown';
+        const { allowed } = getRateLimitInfo(ip);
+        if (!allowed) {
+            return NextResponse.json(
+                { error: "Too many requests. Please wait a minute before trying again." },
+                { status: 429 }
+            );
+        }
+
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
             console.error("GEMINI_API_KEY is missing in environment variables");
@@ -15,6 +45,14 @@ export async function POST(request: Request) {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { message, history, fileUris } = await request.json();
+
+        // Guard against excessively long messages
+        if (!message || typeof message !== 'string' || message.trim().length === 0) {
+            return NextResponse.json({ error: "Message cannot be empty." }, { status: 400 });
+        }
+        if (message.length > 500) {
+            return NextResponse.json({ error: "Message too long. Please keep it under 500 characters." }, { status: 400 });
+        }
 
         let knowledgeBaseContent = '';
         try {
