@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gemini File Search</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "accent-neon": "#ccff00",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#09090b",
+                        "glass-dark": "rgba(255, 255, 255, 0.05)",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-effect {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(60, 131, 246, 0.3);
+            border-radius: 10px;
+        }
+        .glow-active {
+            box-shadow: 0 0 15px rgba(204, 255, 0, 0.2);
+        }
+        .glow-primary {
+            box-shadow: 0 0 15px rgba(60, 131, 246, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen overflow-hidden flex flex-col">
+<!-- Header -->
+<header class="flex items-center justify-between px-6 py-4 border-b border-primary/10 glass-effect sticky top-0 z-50">
+<button class="text-primary hover:text-primary/80 transition-colors">
+<span class="material-icons-round text-2xl">menu</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-primary to-accent-neon bg-clip-text text-transparent">
+            Gemini File Search
+        </h1>
+<div class="relative w-8 h-8 rounded-full overflow-hidden border border-primary/30">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="Close-up portrait of a modern user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9m0D_J9pOMvqIuScHSgkzRAcqOFtfnX-eCe6HejVG5jwPN9Uqzgu6wE_IwceLT2s0TrznSSUa1RmZ7RqBaFNH0IoPoqOl2Zba2Ay6E3jHMt3veayh0RvsZo3ZmyAvr3BOccWhfzHWCrP-5EMRmR1j1853LkZXi5O9k7zbpnlq7znSe9kkgV_CnWt5uLdJWeLHGTiEOZA86hPNdrqUkaJMPRA_kAVBW6fsDWpYxntnGVncDsYc9m7SsPN_fhWZIG_EZx-icfNG_BPN"/>
+</div>
+</header>
+<!-- Knowledge Base (Overlay Style for Mobile/Desktop Simulation) -->
+<!-- Hidden by default in a real app, visible here to show components -->
+<aside class="fixed inset-y-0 left-0 w-[280px] bg-background-dark border-r border-primary/20 z-[60] transform -translate-x-full transition-transform duration-300 pointer-events-none md:pointer-events-auto md:translate-x-0 hidden md:flex flex-col">
+<!-- Sidebar content would go here for tablet/desktop -->
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar flex flex-col">
+<!-- Welcome/Info Card -->
+<div class="glass-effect rounded-xl p-6 bg-primary/5 border-primary/20">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-icons-round text-accent-neon">auto_awesome</span>
+<h2 class="text-sm font-semibold uppercase tracking-wider text-accent-neon">Knowledge Base</h2>
+</div>
+<div class="border-2 border-dashed border-primary/30 rounded-lg p-6 flex flex-col items-center justify-center text-center bg-primary/5 cursor-pointer hover:bg-primary/10 transition-all">
+<span class="material-icons-round text-primary text-3xl mb-2">cloud_upload</span>
+<p class="text-xs text-slate-400">Drag or tap to upload PDFs</p>
+</div>
+<div class="mt-4 space-y-2">
+<!-- File 1: Active -->
+<div class="glass-effect rounded-lg p-3 flex items-center gap-3 bg-white/5">
+<span class="material-icons-round text-primary">description</span>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-medium truncate">Project_Alpha.pdf</p>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-accent-neon animate-pulse"></span>
+<span class="text-[10px] text-accent-neon uppercase font-bold">Active</span>
+</div>
+</div>
+</div>
+<!-- File 2: Processing -->
+<div class="glass-effect rounded-lg p-3 flex items-center gap-3 bg-white/5">
+<span class="material-icons-round text-slate-500">description</span>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-medium truncate">Q4_Report.pdf</p>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce"></span>
+<span class="text-[10px] text-primary uppercase font-bold">Indexing</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Chat History -->
+<div class="flex flex-col space-y-4">
+<!-- AI Message -->
+<div class="flex items-start gap-3 max-w-[85%]">
+<div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/40 shrink-0">
+<span class="material-icons-round text-primary text-sm">smart_toy</span>
+</div>
+<div class="glass-effect rounded-2xl rounded-tl-none p-4 bg-white/5">
+<p class="text-sm leading-relaxed">
+                        Hello! I've indexed your documents. You can ask me anything about <span class="text-primary font-bold">Project Alpha</span> or the <span class="text-primary font-bold">Q4 Report</span>. What would you like to know?
+                    </p>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex items-end flex-col space-y-1">
+<div class="bg-primary glow-primary rounded-2xl rounded-br-none p-4 max-w-[85%]">
+<p class="text-sm leading-relaxed text-white">
+                        What are the main risks identified in Project Alpha for the next quarter?
+                    </p>
+</div>
+<span class="text-[10px] text-slate-500 pr-2 uppercase">Delivered</span>
+</div>
+<!-- AI Message with Citation -->
+<div class="flex items-start gap-3 max-w-[85%]">
+<div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/40 shrink-0">
+<span class="material-icons-round text-primary text-sm">smart_toy</span>
+</div>
+<div class="glass-effect rounded-2xl rounded-tl-none p-4 bg-white/5 space-y-3">
+<p class="text-sm leading-relaxed">
+                        Based on section 4.2 of <span class="text-accent-neon font-medium">Project_Alpha.pdf</span>, the three main risks are:
+                    </p>
+<ul class="text-sm space-y-2 list-disc list-inside text-slate-300">
+<li>Supply chain delays for micro-conductors</li>
+<li>Regulatory compliance shifts in EU markets</li>
+<li>Resource allocation constraints during peak dev cycle</li>
+</ul>
+<div class="flex gap-2">
+<span class="text-[10px] bg-primary/20 text-primary border border-primary/30 px-2 py-1 rounded-md">Page 14</span>
+<span class="text-[10px] bg-primary/20 text-primary border border-primary/30 px-2 py-1 rounded-md">Risk Annex</span>
+</div>
+</div>
+</div>
+<!-- Typing Indicator -->
+<div class="flex items-center gap-2 px-4 py-2 opacity-50">
+<div class="flex gap-1">
+<span class="w-1 h-1 bg-slate-400 rounded-full animate-bounce"></span>
+<span class="w-1 h-1 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+<span class="w-1 h-1 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+</div>
+<span class="text-[10px] text-slate-400 uppercase tracking-widest">Gemini is thinking...</span>
+</div>
+</div>
+</main>
+<!-- Bottom Input Bar -->
+<div class="p-4 bg-background-dark/80 glass-effect border-t border-primary/10 backdrop-blur-xl">
+<div class="flex items-center gap-2 max-w-4xl mx-auto">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:text-primary transition-colors bg-white/5">
+<span class="material-icons-round">add</span>
+</button>
+<div class="flex-1 relative">
+<input class="w-full bg-white/5 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary rounded-full py-3 px-6 text-sm outline-none transition-all placeholder:text-slate-500" placeholder="Ask anything about your documents..." type="text"/>
+<div class="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
+<button class="text-slate-500 hover:text-primary transition-colors">
+<span class="material-icons-round text-xl">mic</span>
+</button>
+</div>
+</div>
+<button class="w-12 h-12 bg-primary hover:bg-primary/90 rounded-full flex items-center justify-center text-white glow-primary transition-all active:scale-95 shadow-lg shadow-primary/20">
+<span class="material-icons-round">send</span>
+</button>
+</div>
+<!-- Safety/Status Text -->
+<div class="mt-2 text-center">
+<p class="text-[10px] text-slate-600">End-to-end encrypted with Gemini RAG v2.4</p>
+</div>
+</div>
+<!-- Hidden Sidebar Backdrop (for interaction simulation) -->
+<div class="fixed inset-0 bg-black/60 z-[55] opacity-0 pointer-events-none transition-opacity md:hidden"></div>
+</body></html>

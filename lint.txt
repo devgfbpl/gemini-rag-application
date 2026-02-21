@@ -1,0 +1,16 @@
+
+> gemini-rag-application@0.1.0 lint
+> eslint
+
+
+D:\Antigravity 2026\gemini-rag-application\app\api\chat\route.ts
+  16:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  18:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  27:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Antigravity 2026\gemini-rag-application\app\page.tsx
+  5:34  warning  'Mic' is defined but never used                 @typescript-eslint/no-unused-vars
+  7:10  warning  'GoogleGenerativeAI' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 5 problems (3 errors, 2 warnings)
+
